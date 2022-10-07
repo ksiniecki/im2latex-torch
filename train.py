@@ -1,5 +1,6 @@
 import argparse
 from functools import partial
+from random import shuffle
 
 import torch
 import torch.optim as optim
@@ -49,6 +50,8 @@ def main():
                         "Or a constant in Inverse sigmoid decay Equation. "
                         "See details in https://arxiv.org/pdf/1506.03099.pdf"
                         )
+    parser.add_argument("--shuffle", action='store_true', default=True,
+                        help="Shuffle the dataset")
 
     parser.add_argument("--lr_decay", type=float, default=0.5,
                         help="Learning Rate Decay Rate")
@@ -91,6 +94,7 @@ def main():
         batch_size=args.batch_size,
         collate_fn=partial(collate_fn, vocab.sign2id),
         pin_memory=True if use_cuda else False,
+        shuffle=True if args.shuffle else False,
         num_workers=4)
     val_loader = DataLoader(
         Im2LatexDataset(args.data_path, 'validate', args.max_len),
