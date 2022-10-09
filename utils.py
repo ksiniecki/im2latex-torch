@@ -20,34 +20,20 @@ def load_and_transform_image(img_path):
 
 def collate_fn(sign2id, batch):
     # filter the pictures that have different weight or height
-    # size = batch[0][0].size()
-    # batch = [img_formula for img_formula in batch
-    #          if img_formula[0].size() == size]
-    # # sort by the length of formula
-    # batch.sort(key=lambda img_formula: len(img_formula[1].split()),
-    #            reverse=True)
-    # process images
-    images, formulas = zip(*batch)
-    max_w, max_h = 0, 0
-    for img in images:
-        _, h, w = img.size()
-        max_w = max(max_w, w)
-        max_h = max(max_h, h)
+    size = batch[0][0].size()
+    batch = [img_formula for img_formula in batch
+             if img_formula[0].size() == size]
+    # sort by the length of formula
+    batch.sort(key=lambda img_formula: len(img_formula[1].split()),
+               reverse=True)
     
-    def padding(img):
-        _, h, w = img.size()
-        padder = transforms.Pad((0, 0, max_w - w, max_h - h))
-        return padder(img)
-
-    imgs = torch.stack(list(map(padding, images)), dim=0).to(dtype=torch.float)
-
-    # process formulas
+    imgs, formulas = zip(*batch)
     formulas = [formula.split() for formula in formulas]
     # targets for training , begin with START_TOKEN
     tgt4training = formulas2tensor(add_start_token(formulas), sign2id)
     # targets for calculating loss , end with END_TOKEN
     tgt4cal_loss = formulas2tensor(add_end_token(formulas), sign2id)
-
+    imgs = torch.stack(imgs, dim=0)
     return imgs, tgt4training, tgt4cal_loss
 
 

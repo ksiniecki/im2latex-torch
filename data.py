@@ -22,7 +22,7 @@ class Im2LatexDataset(Dataset):
 
     def _load_pairs(self):
         pairs = torch.load(join(self.data_dir, "{}.pkl".format(self.split)))
-        for i, (img_name, formula) in tqdm(enumerate(pairs), desc="Loading data", total=len(pairs)):
+        for i, (img_name, formula) in tqdm(enumerate(pairs), desc="Loading {} data".format(self.split), total=len(pairs)):
             pair = (
                 load_and_transform_image(join(self.image_dir, img_name)), 
                 " ".join(formula.split()[:self.max_len])
