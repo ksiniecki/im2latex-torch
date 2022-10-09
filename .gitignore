@@ -6,3 +6,4 @@ data/formula_images_processed
 wandb/*
 results/*
 *.rar
+tmp

@@ -23,6 +23,8 @@ def main():
     # model args
     parser.add_argument("--data_path", type=str,
                         default="./sample_data/", help="The dataset's dir")
+    parser.add_argument("--image_path", type=str,
+                        default="./data/", help="The images's dir")
     parser.add_argument("--cuda", action='store_true',
                         default=True, help="Use cuda or not")
     parser.add_argument("--batch_size", type=int, default=32)
@@ -49,7 +51,7 @@ def main():
     
     # 加载测试集
     data_loader = DataLoader(
-        Im2LatexDataset(args.data_path, args.split, args.max_len),
+        Im2LatexDataset(args.data_path, args.image_path, args.split, args.max_len),
         batch_size=args.batch_size,
         collate_fn=partial(collate_fn, vocab.sign2id),
         pin_memory=True if use_cuda else False,
