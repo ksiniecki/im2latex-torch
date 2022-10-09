@@ -14,7 +14,7 @@ from build_vocab import PAD_TOKEN, UNK_TOKEN
 
 def load_and_transform_image(imgs_name):
     transform = transforms.ToTensor()
-    images = [transform(Image.load(img_path)) for img_path in imgs_name]
+    images = [transform(Image.open(img_path)) for img_path in imgs_name]
 
     max_w, max_h = 0, 0
     for img in images:
