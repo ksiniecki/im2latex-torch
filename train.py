@@ -100,13 +100,13 @@ def main():
         collate_fn=partial(collate_fn, vocab.sign2id),
         pin_memory=True if use_cuda else False,
         shuffle=True if args.shuffle else False,
-        num_workers=4)
+        num_workers=2)
     val_loader = DataLoader(
         val_dataset,
         batch_size=args.batch_size,
         collate_fn=partial(collate_fn, vocab.sign2id),
         pin_memory=True if use_cuda else False,
-        num_workers=4)
+        num_workers=2)
 
     # construct model
     print("Construct model")

@@ -55,7 +55,7 @@ def main():
         batch_size=args.batch_size,
         collate_fn=partial(collate_fn, vocab.sign2id),
         pin_memory=True if use_cuda else False,
-        num_workers=4
+        num_workers=2
     )
 
     model = Im2LatexModel(
