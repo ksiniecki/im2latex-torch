@@ -11,10 +11,23 @@ from PIL import Image
 from build_vocab import PAD_TOKEN, UNK_TOKEN
 
 
-def load_and_transform_image(imgs_name):
+def load_and_transform_image(img_path):
     transform = transforms.ToTensor()
-    images = [transform(Image.open(img_path)) for img_path in imgs_name]
+    image_tensor = transform(Image.open(img_path))
 
+    return image_tensor
+
+
+def collate_fn(sign2id, batch):
+    # filter the pictures that have different weight or height
+    # size = batch[0][0].size()
+    # batch = [img_formula for img_formula in batch
+    #          if img_formula[0].size() == size]
+    # # sort by the length of formula
+    # batch.sort(key=lambda img_formula: len(img_formula[1].split()),
+    #            reverse=True)
+    # process images
+    images, formulas = zip(*batch)
     max_w, max_h = 0, 0
     for img in images:
         _, h, w = img.size()
@@ -28,21 +41,6 @@ def load_and_transform_image(imgs_name):
 
     imgs = torch.stack(list(map(padding, images)), dim=0).to(dtype=torch.float)
 
-    return imgs
-
-
-def collate_fn(sign2id, batch):
-    # filter the pictures that have different weight or height
-    # size = batch[0][0].size()
-    # batch = [img_formula for img_formula in batch
-    #          if img_formula[0].size() == size]
-    # # sort by the length of formula
-    # batch.sort(key=lambda img_formula: len(img_formula[1].split()),
-    #            reverse=True)
-    # process images
-    imgs_name, formulas = zip(*batch)
-    imgs = load_and_transform_image(imgs_name)
-    
     # process formulas
     formulas = [formula.split() for formula in formulas]
     # targets for training , begin with START_TOKEN
