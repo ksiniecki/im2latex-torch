@@ -91,15 +91,18 @@ def main():
 
     # data loader
     print("Construct data loader...")
+    train_dataset = Im2LatexDataset(args.data_path, args.image_path, 'train', args.max_len)
+    val_dataset = Im2LatexDataset(args.data_path, args.image_path, 'validate', args.max_len)
+
     train_loader = DataLoader(
-        Im2LatexDataset(args.data_path, args.image_path, 'train', args.max_len),
+        train_dataset,
         batch_size=args.batch_size,
         collate_fn=partial(collate_fn, vocab.sign2id),
         pin_memory=True if use_cuda else False,
         shuffle=True if args.shuffle else False,
         num_workers=4)
     val_loader = DataLoader(
-        Im2LatexDataset(args.data_path, args.image_path, 'validate', args.max_len),
+        val_dataset,
         batch_size=args.batch_size,
         collate_fn=partial(collate_fn, vocab.sign2id),
         pin_memory=True if use_cuda else False,
