@@ -6,7 +6,7 @@ import torch
 from torch.nn.utils import clip_grad_norm_
 
 from utils import cal_loss, cal_epsilon
-
+from tqdm.auto import tqdm
 
 class Trainer(object):
     def __init__(self, optimizer, model, lr_scheduler,
@@ -43,31 +43,27 @@ class Trainer(object):
         }
 
     def train(self):
-        mes = "Epoch {}, step:{}/{} {:.2f}%, Loss:{:.4f}, Perplexity:{:.4f}"
+        mes = "Epoch {}, Loss:{:.4f}, Perplexity:{:.4f}"
 
         while self.epoch <= self.last_epoch:
             self.model.train()
             losses = 0.0
-            for imgs, tgt4training, tgt4cal_loss in self.train_loader:
+            dset = tqdm(iter(self.train_loader))
+            for imgs, tgt4training, tgt4cal_loss in dset:
                 step_loss = self.train_step(imgs, tgt4training, tgt4cal_loss)
                 losses += step_loss
 
                 # log message
                 if self.step % self.args.print_freq == 0:
                     avg_loss = losses / self.args.print_freq
-                    print(mes.format(
-                        self.epoch, self.step, len(self.train_loader),
-                        100 * self.step / len(self.train_loader),
-                        avg_loss,
-                        2**avg_loss
-                    ))
                     wandb.log({
                         "epoch": self.epoch,
                         "train_loss": avg_loss,
                         "train_perplexity": 2**avg_loss,
                     })
                     losses = 0.0
-
+                dset.set_description(mes.format(self.epoch, step_loss, 2**step_loss))
+            
             # one epoch Finished, calcute val loss
             val_loss = self.validate()
             self.lr_scheduler.step(val_loss)
