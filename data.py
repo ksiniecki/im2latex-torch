@@ -4,7 +4,6 @@ from torch.utils.data import Dataset
 from utils import load_and_transform_image
 
 import torch
-from tqdm import tqdm
 
 
 class Im2LatexDataset(Dataset):
