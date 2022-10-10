@@ -43,8 +43,6 @@ class Trainer(object):
         }
 
     def train(self):
-        mes = "Epoch {}, Loss:{:.4f}, Perplexity:{:.4f}"
-
         while self.epoch <= self.last_epoch:
             self.model.train()
             losses = 0.0
@@ -62,7 +60,7 @@ class Trainer(object):
                         "train_perplexity": 2**avg_loss,
                     })
                     losses = 0.0
-                dset.set_description(mes.format(self.epoch, step_loss, 2**step_loss))
+                dset.set_description("Epoch {}, Loss:{:.4f}".format(self.epoch, step_loss))
             
             # one epoch Finished, calcute val loss
             val_loss = self.validate()
@@ -95,9 +93,9 @@ class Trainer(object):
     def validate(self):
         self.model.eval()
         val_total_loss = 0.0
-        mes = "Epoch {}, validation average loss:{:.4f}, Perplexity:{:.4f}"
         with torch.no_grad():
-            for imgs, tgt4training, tgt4cal_loss in self.val_loader:
+            dset = tqdm(iter(self.val_loader))
+            for imgs, tgt4training, tgt4cal_loss in dset:
                 imgs = imgs.to(self.device)
                 tgt4training = tgt4training.to(self.device)
                 tgt4cal_loss = tgt4cal_loss.to(self.device)
@@ -107,10 +105,9 @@ class Trainer(object):
                 logits = self.model(imgs, tgt4training, epsilon)
                 loss = cal_loss(logits, tgt4cal_loss)
                 val_total_loss += loss
+
+                dset.set_description("Epoch {}, val avg loss:{:.4f}".format(self.epoch, loss))
             avg_loss = val_total_loss / len(self.val_loader)
-            print(mes.format(
-                self.epoch, avg_loss, 2**avg_loss
-            ))
             wandb.log({
                 "epoch": self.epoch,
                 "val_loss": avg_loss,
