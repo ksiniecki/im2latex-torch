@@ -80,7 +80,6 @@ def main():
 
         references.extend(ref)
         results.extend(res)
-        break
     
     result_file.write('\n'.join(references))
     ref_file.write('\n'.join(results))
