@@ -75,7 +75,7 @@ def main():
             reference = latex_producer._idx2formulas(tgt4cal_loss)
             results = latex_producer(imgs)
         except RuntimeError:
-            break
+            pass
 
         result_file.write('\n'.join(results))
         ref_file.write('\n'.join(reference))

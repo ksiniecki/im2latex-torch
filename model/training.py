@@ -60,7 +60,7 @@ class Trainer(object):
                         "train_perplexity": 2**avg_loss,
                     })
                     losses = 0.0
-                dset.set_description("Epoch {}, Loss:{:.4f}".format(self.epoch, step_loss))
+                dset.set_description("Epoch {}, train loss:{:.4f}".format(self.epoch, step_loss))
             
             # one epoch Finished, calcute val loss
             val_loss = self.validate()
@@ -106,7 +106,7 @@ class Trainer(object):
                 loss = cal_loss(logits, tgt4cal_loss)
                 val_total_loss += loss
 
-                dset.set_description("Epoch {}, val avg loss:{:.4f}".format(self.epoch, loss))
+                dset.set_description("Epoch {}, valid loss: {:.4f}".format(self.epoch, loss))
             avg_loss = val_total_loss / len(self.val_loader)
             wandb.log({
                 "epoch": self.epoch,
