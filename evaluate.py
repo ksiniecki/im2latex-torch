@@ -69,16 +69,21 @@ def main():
     latex_producer = LatexProducer(
         model, vocab, max_len=args.max_len,
         use_cuda=use_cuda, beam_size=args.beam_size)
-
+    
+    references, results = [], []
     for imgs, tgt4training, tgt4cal_loss in tqdm(data_loader):
         try:
-            reference = latex_producer._idx2formulas(tgt4cal_loss)
-            results = latex_producer(imgs)
+            ref = latex_producer._idx2formulas(tgt4cal_loss)
+            res = latex_producer(imgs)
         except RuntimeError:
             pass
 
-        result_file.write('\n'.join(results))
-        ref_file.write('\n'.join(reference))
+        references.extend(ref)
+        results.extend(res)
+        break
+    
+    result_file.write('\n'.join(references))
+    ref_file.write('\n'.join(results))
 
     result_file.close()
     ref_file.close()
