@@ -78,9 +78,10 @@ def main():
         except RuntimeError:
             pass
 
-        references.extend(ref)
-        results.extend(res)
-    
+        if len(ref) == len(res):
+            references.extend(ref)
+            results.extend(res)
+        
     result_file.write('\n'.join(references))
     ref_file.write('\n'.join(results))
 
