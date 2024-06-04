@@ -22,9 +22,9 @@ def main():
 
     # model args
     parser.add_argument("--data_path", type=str,
-                        default="./sample_data/", help="The dataset's dir")
+                        default="./data/", help="The dataset's dir")
     parser.add_argument("--image_path", type=str,
-                        default="./data/", help="The images's dir")
+                        default="./data/formula_images_processed", help="The images's dir")
     parser.add_argument("--cuda", action='store_true',
                         default=True, help="Use cuda or not")
     parser.add_argument("--batch_size", type=int, default=32)

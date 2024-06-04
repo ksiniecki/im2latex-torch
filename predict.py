@@ -15,7 +15,9 @@ def main():
     parser.add_argument('--model_path', required=True,
                         help='path of the evaluated model')
     parser.add_argument("--data_path", type=str,
-                        default="./sample_data/", help="The dataset's dir")
+                        default="./data/", help="The dataset's dir")
+    parser.add_argument("--im_path", type=str,
+                        required=True, help="The path to image")
     parser.add_argument("--dropout", type=float,
                         default=0., help="Dropout probility")
     parser.add_argument("--max_len", type=int,
@@ -57,22 +59,13 @@ def main():
         use_cuda=use_cuda, beam_size=args.beam_size)
     
     transform = transforms.ToTensor()
-    while True:
-        try:
-            im_path = input("Image path: ")
-            img = Image.open(im_path)
-            img_tensor = transform(img)
-            img_tensor = torch.unsqueeze(img_tensor, 0)
-            try:
-                result = latex_producer(img_tensor)
-                print(result[0])
-            except:
-                print("Can't predict. Try another!")
-
-        except KeyboardInterrupt:
-            print("Exit!")
-            break
-
+    img = Image.open(args.im_path)
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    img_tensor = transform(img)
+    img_tensor = torch.unsqueeze(img_tensor, 0)
+    result = latex_producer(img_tensor)
+    print('Prediction:', result[0])
 
 if __name__ == "__main__":
     main()

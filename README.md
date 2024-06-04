@@ -3,20 +3,7 @@
 
 # Im2Latex
 
-![License](https://img.shields.io/apm/l/vim-mode.svg)
-
 Deep CNN Encoder + LSTM Decoder with Attention for Image to Latex, the pytorch implemention of the model architecture used by the [Seq2Seq for LaTeX generation](https://guillaumegenthial.github.io/image-to-latex.html)
-
-
-
-## Sample results from this implemention
-
-
-
-![sample_result](imgs/sample_result.png)
-
-
-
 
 
 ## Experimental results on the IM2LATEX-100K  test dataset
@@ -31,21 +18,20 @@ Deep CNN Encoder + LSTM Decoder with Attention for Image to Latex, the pytorch i
 
 
 
-**Install dependency:**
+**Install dependencies:**
 
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 **Download the dataset for training:**
-
 ```bash
 cd data
-wget http://lstm.seas.harvard.edu/latex/data/im2latex_validate_filter.lst
-wget http://lstm.seas.harvard.edu/latex/data/im2latex_train_filter.lst
-wget http://lstm.seas.harvard.edu/latex/data/im2latex_test_filter.lst
-wget http://lstm.seas.harvard.edu/latex/data/formula_images_processed.tar.gz
-wget http://lstm.seas.harvard.edu/latex/data/im2latex_formulas.norm.lst
+wget https://im2markup.yuntiandeng.com/data/im2latex_validate_filter.lst
+wget https://im2markup.yuntiandeng.com/data/im2latex_train_filter.lst
+wget https://im2markup.yuntiandeng.com/data/im2latex_test_filter.lst
+wget https://im2markup.yuntiandeng.com/data/formula_images_processed.tar.gz
+wget https://im2markup.yuntiandeng.com/data/im2latex_formulas.norm.lst
 tar -zxvf formula_images_processed.tar.gz
 ```
 
@@ -61,64 +47,13 @@ python build_vocab.py
 ```
 
 **Train:**
-
-     python train.py \
-          --data_path=[data dir] \
-          --save_dir=[the dir for saving ckpts] \
-          --dropout=0.2 --add_position_features \
-          --epoches=25 --max_len=150
+     python train.py --dropout=0.2 --add_position_features --epoches=25 --max_len=150
 **Evaluate:**
 
 ```bash
-python evaluate.py --split=test \
-     --model_path=[the path to model] \
-     --data_path=[data dir] \
-     --batch_size=32 \
-     --ref_path=[the file to store reference] \
-     --result_path=[the file to store decoding result]
+python evaluate.py --split=test --model_path=ckpts/best_ckpt.pt --batch_size=32
 ```
-
-
-
-## Features
-
-- [x] Schedule Sampling from [Scheduled Sampling for Sequence Prediction with Recurrent Neural Networks](https://arxiv.org/pdf/1506.03099.pdf)
-- [x] Positional Embedding from [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-- [x] Batch beam search
-- [x] Training from checkpoint 
-- [ ] Improve the code of data loading for cpu/cuda memery efficiency 
-- [ ] **Finetune hyper parameters for better performance**
-- [ ] A HTML Page allowing upload picture to decode
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+**Predict:**
+```bash
+python .\predict.py --model_path ckpts/best_ckpt.pt --im_path data/formula_images_processed/1a00a76d4e.png
+```
