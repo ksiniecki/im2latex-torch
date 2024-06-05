@@ -12,8 +12,15 @@ from build_vocab import PAD_TOKEN, UNK_TOKEN
 
 
 def load_and_transform_image(img_path):
+    # Open the image
+    image = Image.open(img_path)
+    
+    # Convert grayscale images to RGB
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+
     transform = transforms.ToTensor()
-    image_tensor = transform(Image.open(img_path))
+    image_tensor = transform(image)
 
     return image_tensor
 

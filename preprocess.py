@@ -10,11 +10,11 @@ def preprocess(data_dir, split):
 
     print("Process {} dataset...".format(split))
 
-    formulas_file = join(data_dir, "im2latex_formulas.norm.lst")
+    formulas_file = join(data_dir, "hw_labels.lst")
     with open(formulas_file, 'r') as f:
         formulas = [formula.strip('\n') for formula in f.readlines()]
 
-    split_file = join(data_dir, "im2latex_{}_filter.lst".format(split))
+    split_file = join(data_dir, "hw_{}_filter.lst".format(split))
     pairs = []
     # transform = transforms.ToTensor()
     with open(split_file, 'r') as f:
