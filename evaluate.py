@@ -79,8 +79,8 @@ def main():
             references.extend(ref)
             results.extend(res)
         
-    result_file.write('\n'.join(references))
-    ref_file.write('\n'.join(results))
+    result_file.write('\n'.join(results))
+    ref_file.write('\n'.join(references))
 
     result_file.close()
     ref_file.close()
