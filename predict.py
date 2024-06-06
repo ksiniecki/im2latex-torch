@@ -8,6 +8,8 @@ from build_vocab import Vocab, load_vocab
 from PIL import Image
 from torchvision import transforms
 
+from utils import load_and_transform_image
+
 def main():
     parser = argparse.ArgumentParser(description="Im2Latex Predict")
     parser.add_argument("--cuda", action='store_true',
@@ -58,11 +60,7 @@ def main():
         model, vocab, max_len=args.max_len,
         use_cuda=use_cuda, beam_size=args.beam_size)
     
-    transform = transforms.ToTensor()
-    img = Image.open(args.im_path)
-    if img.mode != 'RGB':
-        img = img.convert('RGB')
-    img_tensor = transform(img)
+    img_tensor = load_and_transform_image(args.im_path)
     img_tensor = torch.unsqueeze(img_tensor, 0)
     result = latex_producer(img_tensor)
     print('Prediction:', result[0])

@@ -24,7 +24,7 @@ def main():
     parser.add_argument("--data_path", type=str,
                         default="./data/", help="The dataset's dir")
     parser.add_argument("--image_path", type=str,
-                        default="./data/formula_images_processed", help="The images's dir")
+                        default="./data/hw_images", help="The images's dir")
     parser.add_argument("--cuda", action='store_true',
                         default=True, help="Use cuda or not")
     parser.add_argument("--batch_size", type=int, default=32)
@@ -72,18 +72,15 @@ def main():
     
     references, results = [], []
     for imgs, tgt4training, tgt4cal_loss in tqdm(data_loader):
-        try:
-            ref = latex_producer._idx2formulas(tgt4cal_loss)
-            res = latex_producer(imgs)
-        except RuntimeError:
-            pass
+        ref = latex_producer._idx2formulas(tgt4cal_loss)
+        res = latex_producer(imgs)
 
         if len(ref) == len(res):
             references.extend(ref)
             results.extend(res)
         
-    result_file.write('\n'.join(references))
-    ref_file.write('\n'.join(results))
+    result_file.write('\n'.join(results))
+    ref_file.write('\n'.join(references))
 
     result_file.close()
     ref_file.close()

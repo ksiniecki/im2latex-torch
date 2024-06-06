@@ -1,7 +1,7 @@
 __pycache__
 .vscode
 test.py
-data/formula_images_processed
+data/
 *.pkl
 wandb/*
 results/*

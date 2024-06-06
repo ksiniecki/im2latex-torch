@@ -37,11 +37,11 @@ def build_vocab(data_dir, min_count=1):
     vocab = Vocab()
     counter = Counter()
 
-    formulas_file = join(data_dir, 'im2latex_formulas.norm.lst')
+    formulas_file = join(data_dir, 'hw_labels.lst')
     with open(formulas_file, 'r') as f:
         formulas = [formula.strip('\n') for formula in f.readlines()]
 
-    with open(join(data_dir, 'im2latex_train_filter.lst'), 'r') as f:
+    with open(join(data_dir, 'hw_train_filter.lst'), 'r') as f:
         for line in f:
             _, idx = line.strip('\n').split()
             idx = int(idx)
