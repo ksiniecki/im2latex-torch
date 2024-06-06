@@ -4,6 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import init
 from torch.distributions.uniform import Uniform
+from torchvision.models import vit_b_16  # Import the Vision Transformer model
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPT2Config  # Transformer decoder
 
 from .position_embedding import add_positional_features
 
@@ -21,7 +23,7 @@ class Im2LatexModel(nn.Module):
         self.vit_encoder.heads = nn.Identity()  # Remove classification head
 
         # Transformer decoder
-        config = GPT2Config(vocab_size=out_size, n_embd=emb_size, n_layer=n_layer, n_head=8)
+        config = GPT2Config(vocab_size=out_size, n_embd=emb_size, n_layer=n_layer, n_head=8, add_cross_attention=True)
         self.transformer_decoder = GPT2LMHeadModel(config)
         self.embedding = nn.Embedding(out_size, emb_size)
 
@@ -47,6 +49,9 @@ class Im2LatexModel(nn.Module):
 
     def encode(self, imgs):
         encoded_imgs = self.vit_encoder(imgs)  # [B, 197, 768]
+
+        if len(encoded_imgs.shape) == 2:
+            encoded_imgs = encoded_imgs.unsqueeze(1)  # Add timesteps dimension if missing
         if self.add_pos_feat:
             encoded_imgs = add_positional_features(encoded_imgs)
         return encoded_imgs
