@@ -5,6 +5,7 @@ import argparse
 import torch
 from tqdm import tqdm
 
+
 def preprocess(data_dir, split):
     assert split in ["train", "validate", "test"]
 
