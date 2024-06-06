@@ -27,7 +27,7 @@ def main():
     parser.add_argument("--data_path", type=str,
                         default="./data/", help="The dataset's dir")
     parser.add_argument("--image_path", type=str,
-                        default="./data/formula_images_processed", help="The images's dir")
+                        default="./data/hw_images", help="The images's dir")
     parser.add_argument("--add_position_features", action='store_true',
                         default=False, help="Use position embeddings or not")
     # training args
