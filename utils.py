@@ -18,7 +18,7 @@ def load_and_transform_image(img_path):
     original_width, original_height = image.size
     new_width = original_width // 4
     new_height = original_height // 4
-    image = image.resize((new_width, new_height))
+    image = image.resize((224, 224))
     
     # Convert grayscale images to RGB
     if image.mode != 'RGB':
